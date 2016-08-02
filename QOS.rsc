@@ -66,6 +66,12 @@ add action=mark-packet chain=prerouting comment=Mark_Packet_Best_Effort \
 add action=mark-packet chain=prerouting comment=Mark_Packet_Least_Effort \
     connection-mark=Least_Effort new-packet-mark=Least_Effort passthrough=no
 
+/queue type
+add kind=pcq name=PCQ_download pcq-classifier=dst-address \
+    pcq-dst-address6-mask=64 pcq-src-address6-mask=64
+add kind=pcq name=PCQ_upload pcq-classifier=src-address pcq-dst-address6-mask=\
+    64 pcq-src-address6-mask=64
+
 /queue tree
 add max-limit=$SPEED name=PCQ_DOWN parent=global queue=PCQ_download
 add max-limit=$SPEED name=PCQ_UP parent=("pppoe_out_".$USER) queue=PCQ_upload
