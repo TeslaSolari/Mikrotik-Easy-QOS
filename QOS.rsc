@@ -68,7 +68,7 @@ add action=mark-packet chain=prerouting comment=Mark_Packet_Least_Effort \
 
 /queue tree
 add max-limit=$SPEED name=PCQ_DOWN parent=global queue=PCQ_download
-add max-limit=$SPEED name=PCQ_UP parent="pppoe_out_".$USER queue=PCQ_upload
+add max-limit=$SPEED name=PCQ_UP parent=("pppoe_out_".$USER) queue=PCQ_upload
 add name=Critical_Down packet-mark=Critical parent=PCQ_DOWN priority=1 queue=\
     default
 add name=Flash_Override_Down packet-mark=Flash_Override parent=PCQ_DOWN \
