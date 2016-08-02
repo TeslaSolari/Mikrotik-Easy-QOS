@@ -1,20 +1,16 @@
 # variables
-#define local Variables
-local PPPOE_SPEED;
-local USER;
-#Client Details
-#Clients Username
-set USER "airsure"
-put $USER;
+# define local Variables
+global SPEED;
+global USER;
+set $USER "flanagan"
 #Clients Line Speed
-set PPPOE_SPEED "2M";
-put $PPPOE_SPEED;
+set $SPEED "10M";
 
 /system identity
 set name=$USER
 
 /interface pppoe-client
-set [ find name=pppoe-out1 ] name="pppoe_out_".$iHobe
+set [ find name=pppoe-out1 ] name=("pppoe_out_".$USER);
 
 /ip firewall layer7-protocol
 add name=speedtest regexp="^.+(speedtest).*\\\$"
@@ -71,8 +67,8 @@ add action=mark-packet chain=prerouting comment=Mark_Packet_Least_Effort \
     connection-mark=Least_Effort new-packet-mark=Least_Effort passthrough=no
 
 /queue tree
-add max-limit=$PPPOE_SPEED name=PCQ_DOWN parent=global queue=PCQ_download
-add max-limit=$PPPOE_SPEED name=PCQ_UP parent="pppoe_out_".$USER queue=PCQ_upload
+add max-limit=$SPEED name=PCQ_DOWN parent=global queue=PCQ_download
+add max-limit=$SPEED name=PCQ_UP parent="pppoe_out_".$USER queue=PCQ_upload
 add name=Critical_Down packet-mark=Critical parent=PCQ_DOWN priority=1 queue=\
     default
 add name=Flash_Override_Down packet-mark=Flash_Override parent=PCQ_DOWN \
